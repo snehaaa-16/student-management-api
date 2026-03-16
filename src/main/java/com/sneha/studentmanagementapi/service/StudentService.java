@@ -22,4 +22,8 @@ public class StudentService {
     public List<Student> getAllStudents() {
         return repository.findAll();
     }
+
+    public void deleteStudent(Long id) {
+        repository.deleteById(id);
+    }
 }
