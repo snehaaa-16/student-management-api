@@ -4,6 +4,7 @@ import com.sneha.studentmanagementapi.model.Student;
 import com.sneha.studentmanagementapi.service.StudentService;
 import com.sneha.studentmanagementapi.dto.StudentDTO;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody StudentDTO dto) {
+    public Student createStudent(@Valid @RequestBody StudentDTO dto) {
 
         Student student = new Student();
         student.setName(dto.getName());
