@@ -2,6 +2,7 @@ package com.sneha.studentmanagementapi.controller;
 
 import com.sneha.studentmanagementapi.model.Student;
 import com.sneha.studentmanagementapi.service.StudentService;
+import com.sneha.studentmanagementapi.dto.StudentDTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,5 +36,16 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable Long id) {
         service.deleteStudent(id);
+    }
+
+    @PostMapping
+    public Student createStudent(@RequestBody StudentDTO dto) {
+
+        Student student = new Student();
+        student.setName(dto.getName());
+        student.setEmail(dto.getEmail());
+        student.setAge(dto.getAge());
+
+        return service.saveStudent(student);
     }
 }
