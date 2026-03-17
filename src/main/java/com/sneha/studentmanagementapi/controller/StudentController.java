@@ -18,13 +18,24 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
+    public Student createStudent(@RequestBody StudentDTO dto) {
+
+        Student student = new Student();
+        student.setName(dto.getName());
+        student.setEmail(dto.getEmail());
+        student.setAge(dto.getAge());
+
         return service.saveStudent(student);
     }
 
     @GetMapping
     public List<Student> getStudents() {
         return service.getAllStudents();
+    }
+
+    @GetMapping("/{id}")
+    public Student getStudent(@PathVariable Long id) {
+        return service.getStudentById(id);
     }
 
     @PutMapping("/{id}")
@@ -36,16 +47,5 @@ public class StudentController {
     @DeleteMapping("/{id}")
     public void deleteStudent(@PathVariable Long id) {
         service.deleteStudent(id);
-    }
-
-    @PostMapping
-    public Student createStudent(@RequestBody StudentDTO dto) {
-
-        Student student = new Student();
-        student.setName(dto.getName());
-        student.setEmail(dto.getEmail());
-        student.setAge(dto.getAge());
-
-        return service.saveStudent(student);
     }
 }

@@ -1,5 +1,6 @@
 package com.sneha.studentmanagementapi.service;
 
+import com.sneha.studentmanagementapi.exception.StudentNotFoundException;
 import com.sneha.studentmanagementapi.model.Student;
 import com.sneha.studentmanagementapi.repository.StudentRepository;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,10 @@ public class StudentService {
 
     public void deleteStudent(Long id) {
         repository.deleteById(id);
+    }
+
+    public Student getStudentById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new StudentNotFoundException("Student not found with id " + id));
     }
 }
