@@ -3,6 +3,10 @@ package com.sneha.studentmanagementapi.service;
 import com.sneha.studentmanagementapi.exception.StudentNotFoundException;
 import com.sneha.studentmanagementapi.model.Student;
 import com.sneha.studentmanagementapi.repository.StudentRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +26,11 @@ public class StudentService {
 
     public List<Student> getAllStudents() {
         return repository.findAll();
+    }
+
+    public Page<Student> getStudentsPaginated(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        return repository.findAll(pageable);
     }
 
     public void deleteStudent(Long id) {

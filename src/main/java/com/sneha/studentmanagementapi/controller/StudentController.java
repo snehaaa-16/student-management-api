@@ -3,6 +3,7 @@ package com.sneha.studentmanagementapi.controller;
 import com.sneha.studentmanagementapi.model.Student;
 import com.sneha.studentmanagementapi.service.StudentService;
 import com.sneha.studentmanagementapi.dto.StudentDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
@@ -37,6 +38,14 @@ public class StudentController {
     @GetMapping("/{id}")
     public Student getStudent(@PathVariable Long id) {
         return service.getStudentById(id);
+    }
+
+    @GetMapping("/paginated")
+    public Page<Student> getStudentsPaginated(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return service.getStudentsPaginated(page, size);
     }
 
     @PutMapping("/{id}")
