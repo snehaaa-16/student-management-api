@@ -31,11 +31,15 @@ public class JwtFilter implements Filter {
 
             try {
                 String username = jwtUtil.extractUsername(token);
+                String role = jwtUtil.extractRole(token);
 
-                org.springframework.security.authentication.UsernamePasswordAuthenticationToken auth =
-                        new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                                username, null, java.util.Collections.emptyList()
-                        );
+                var authorities = java.util.Collections.singletonList(
+                        new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + role)
+                );
+
+                var auth = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                        username, null, authorities
+                );
 
                 org.springframework.security.core.context.SecurityContextHolder.getContext()
                         .setAuthentication(auth);

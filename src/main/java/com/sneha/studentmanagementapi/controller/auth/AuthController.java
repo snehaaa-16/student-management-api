@@ -16,8 +16,12 @@ public class AuthController {
     public String login(@RequestParam String username,
                         @RequestParam String password) {
 
+        if ("admin".equals(username) && "admin".equals(password)) {
+            return jwtUtil.generateToken(username, "ADMIN");
+        }
+
         if ("user".equals(username) && "password".equals(password)) {
-            return jwtUtil.generateToken(username);
+            return jwtUtil.generateToken(username, "USER");
         }
 
         throw new RuntimeException("Invalid credentials");

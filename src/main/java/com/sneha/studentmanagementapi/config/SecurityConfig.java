@@ -22,11 +22,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(
-                                "/auth/**",
-                                "/swagger-ui/**",
-                                "/v3/api-docs/**"
-                        ).permitAll()
+                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/students/**").hasRole("ADMIN")
+                        .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/students/**").hasRole("ADMIN")
+                        .requestMatchers("/students/**").hasAnyRole("USER", "ADMIN")
+
                         .anyRequest().authenticated()
                 )
 
