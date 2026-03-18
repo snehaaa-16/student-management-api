@@ -32,7 +32,13 @@ public class JwtFilter implements Filter {
             try {
                 String username = jwtUtil.extractUsername(token);
 
-                System.out.println("Valid token for user: " + username);
+                org.springframework.security.authentication.UsernamePasswordAuthenticationToken auth =
+                        new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                                username, null, java.util.Collections.emptyList()
+                        );
+
+                org.springframework.security.core.context.SecurityContextHolder.getContext()
+                        .setAuthentication(auth);
 
             } catch (Exception e) {
                 ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
