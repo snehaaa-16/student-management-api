@@ -22,11 +22,12 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 
+                        .requestMatchers("/students/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/students/**").hasRole("ADMIN")
                         .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/students/**").hasRole("ADMIN")
-                        .requestMatchers("/students/**").hasAnyRole("USER", "ADMIN")
 
                         .anyRequest().authenticated()
                 )
@@ -37,5 +38,10 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable());
 
         return http.build();
+    }
+
+    @Bean
+    public org.springframework.security.crypto.password.PasswordEncoder passwordEncoder() {
+        return new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
     }
 }
