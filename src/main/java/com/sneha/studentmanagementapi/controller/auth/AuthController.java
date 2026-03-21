@@ -1,5 +1,6 @@
 package com.sneha.studentmanagementapi.controller.auth;
 
+import com.sneha.studentmanagementapi.dto.RegisterRequest;
 import com.sneha.studentmanagementapi.model.User;
 import com.sneha.studentmanagementapi.repository.UserRepository;
 import com.sneha.studentmanagementapi.security.JwtUtil;
@@ -34,5 +35,22 @@ public class AuthController {
         }
 
         return jwtUtil.generateToken(user.getUsername(), user.getRole());
+    }
+
+    @PostMapping("/register")
+    public String register(@RequestBody RegisterRequest request) {
+
+        if (userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        }
+
+        User user = new User();
+        user.setUsername(request.getUsername());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setRole(request.getRole().toUpperCase());
+
+        userRepository.save(user);
+
+        return "User registered successfully";
     }
 }
