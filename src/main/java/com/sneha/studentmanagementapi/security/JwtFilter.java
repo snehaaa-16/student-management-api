@@ -29,30 +29,29 @@ public class JwtFilter implements Filter {
             return;
         }
         String authHeader = req.getHeader("Authorization");
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            chain.doFilter(request, response);
+            return;
+        }
+        String token = authHeader.substring(7);
+        try {
+            String username = jwtUtil.extractUsername(token);
+            String role = jwtUtil.extractRole(token);
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            var authorities = java.util.Collections.singletonList(
+                    new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + role)
+            );
 
-            String token = authHeader.substring(7);
+            var auth = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                    username, null, authorities
+            );
 
-            try {
-                String username = jwtUtil.extractUsername(token);
-                String role = jwtUtil.extractRole(token);
+            org.springframework.security.core.context.SecurityContextHolder.getContext()
+                    .setAuthentication(auth);
 
-                var authorities = java.util.Collections.singletonList(
-                        new org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_" + role)
-                );
-
-                var auth = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-                        username, null, authorities
-                );
-
-                org.springframework.security.core.context.SecurityContextHolder.getContext()
-                        .setAuthentication(auth);
-
-            } catch (Exception e) {
-                ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
+        } catch (Exception e) {
+            ((HttpServletResponse) response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
         }
 
         chain.doFilter(request, response);
