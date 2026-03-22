@@ -23,8 +23,9 @@ public class JwtFilter implements Filter {
             throws IOException, ServletException {
 
         HttpServletRequest req = (HttpServletRequest) request;
-        String path = req.getServletPath();
-        if (path.startsWith("/auth")) {
+        String path = req.getRequestURI();
+
+        if (path.equals("/auth/login") || path.equals("/auth/register")) {
             chain.doFilter(request, response);
             return;
         }
